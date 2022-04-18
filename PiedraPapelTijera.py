@@ -1,4 +1,4 @@
-# Juego de piedra papel o tijera
+# Juego de piedra, papel o tijera
 
 import random
 
