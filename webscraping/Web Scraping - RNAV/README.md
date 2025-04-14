@@ -17,6 +17,11 @@ Los datos se guardan automáticamente en:
 - Un archivo `.CSV` (local)
 - Un archivo `.XLSX` en Google Drive
 
+Existe dos versiones de archivos con extension py:
+
+- web_scraping-rnav.py: Es una version para ejecutar en la pc, sin la conexion a Google Drive
+- web_scraping-rnav_colab-jupiter.py: Es una version para ejecutar en Google Colab o en Jupyter
+
 ## 🧰 Tecnologías utilizadas
 
 - `Playwright` → Para automatizar la navegación por la web
