@@ -51,23 +51,41 @@ drive.mount('/content/drive')
 6. Si aparece un **modal emergente (pop-up)**, se cierra automáticamente para no interrumpir la navegación.
 7. Finalmente, se guardan los resultados en CSV y XLSX.
 
-## 💡 Sobre el modal emergente
+## ⚙️ Manejo del Modal en el Scraping
 
-El sitio a veces muestra un modal (ventana emergente) con un video o información. Esto puede interferir con los clics y el scraping.
+En el proceso de scraping, a veces la página web puede mostrar un modal (una ventana emergente) que bloquea el acceso al contenido o interrumpe la navegación. Los modales son comúnmente utilizados para mostrar mensajes de bienvenida, publicidad o notificaciones. Para asegurarnos de que el scraper pueda continuar su ejecución sin problemas, se implementó un manejo especial para detectar y cerrar estos modales si están presentes.
 
-El script detecta si hay un modal abierto mediante:
+---
 
-```js
-const modal = document.querySelector('[role=dialog]')
+### **¿Qué hace el código con respecto a los modales?**
+
+En el código, se utiliza la función `evaluate` para verificar si existe un modal abierto y cerrarlo. Este proceso se realiza de la siguiente manera:
+
+```python
+# Cerramos el modal (si está abierto) para poder seguir navegando
+await page.evaluate("""
+    () => {
+        const modal = document.querySelector('[role=dialog]');  // Buscamos el modal en el DOM
+        if (modal) {  // Si existe el modal
+            window.dispatchEvent(new CustomEvent('close-modal', { detail: { id: 'video1year' }}));  // Cerramos el modal
+        }
+    }
+""")
 ```
 
-Y si existe, lo cierra usando un `CustomEvent`:
+---
 
-```js
-window.dispatchEvent(new CustomEvent('close-modal', { detail: { id: 'video1year' }}))
-```
+#### **Explicación del código**:
 
-Esto evita bloqueos y permite continuar con el scraping.
+1. **`document.querySelector('[role=dialog]')`**  
+   Se utiliza este selector para buscar un modal en el DOM de la página web. El atributo `[role=dialog]` se usa comúnmente para representar modales, ya que su función semántica es mostrar un cuadro de diálogo.
+
+2. **`window.dispatchEvent(new CustomEvent('close-modal'))`**  
+   Si el modal es encontrado, se envía un evento de cierre utilizando `dispatchEvent` para simular la acción de cerrar el modal. Esto permite que el scraper continúe trabajando sin ser bloqueado por el modal.
+
+3. **¿Por qué es importante esto?**  
+   Sin este manejo del modal, si la página presenta un modal, podría bloquear la extracción de los datos o interrumpir la navegación hacia la siguiente página. Esto se evita cerrando automáticamente el modal si está presente.
+
 
 ## 📦 Ejecución del script
 
