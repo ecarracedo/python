@@ -19,7 +19,7 @@ Buying a call option is a bullish strategy that offers potentially unlimited pro
 - `Potential Profit`: Unlimited
 - `Potential Loss`: Limited (the premium paid)
 - `Optimal Strategy`: If the underlying rises significantly in price
-- `What is paid`: A premium, which is the cost of the option
+- `What's Paid`: A premium, which is the cost of the option
 
 ### Sell CALL
 
@@ -28,7 +28,7 @@ Selling a call option is a bearish strategy that offers limited potential profit
 - `Potential Profit`: Limited (the premium received)
 - `Potential Loss`: Unlimited
 - `Optimal Strategy`: If the asset price falls below the strike price
-- `What is received`: A premium, which is the cost of the option and the profit obtained until expiration
+- `What's Received`: A premium, which is the cost of the option and the profit obtained until expiration
 
 ### Useful Links
 

@@ -19,7 +19,7 @@ Comprar una opción call es una estrategia alcista que ofrece un beneficio poten
 - `Beneficio Potencial`: Ilimitado
 - `Perdida Potencial`: Limitada (la prima pagada)
 - `Estrategia Optima`: Si el subyacente sube de precio de manera significativa
-- `Qué se paga`: Una prima, que es el coste de la opción
+- `Qué se Paga`: Una prima, que es el coste de la opción
 
 ### Venta CALL
 
@@ -28,7 +28,7 @@ Vender una opción call es una estrategia bajista que ofrece una ganancia potenc
 - `Beneficio Potencial`: Limitado (la prima recibida)
 - `Perdida Potencial`: Ilimitada
 - `Estrategia Optima`: Si el precio del activo cae por debajo del precio de ejercicio
-- `Qué se recibe`: Una prima, que es el coste de la opción y la ganacia obtenida hasta su vencimiento.
+- `Qué Se Recibe`: Una prima, que es el coste de la opción y la ganacia obtenida hasta su vencimiento.
 
 ### Link de Interes
 
