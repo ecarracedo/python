@@ -12,55 +12,96 @@ Original file is located at
 !playwright install
 !apt install -y libnss3
 
-import asyncio  # Para ejecutar funciones asíncronas
-import csv  # Para guardar los datos como archivo CSV
-import pandas as pd  # Para trabajar con DataFrames y exportar a Excel
-import os  # Para manejar rutas de carpetas
-from google.colab import drive  # Para montar Google Drive en Colab
-from playwright.async_api import async_playwright, TimeoutError  # Playwright para scraping web
+import asyncio
+import csv
+import pandas as pd
+import os
+import re
+from google.colab import drive
+from playwright.async_api import async_playwright, TimeoutError
 
 # Montar Google Drive en Colab
 drive.mount('/content/drive')
 
-async def scrapear_agencias_completo():
-    provincia = input("📍 Ingresá la provincia que querés buscar: ").strip()  # Solicita la provincia al usuario
+# Lista de provincias de Argentina
+PROVINCIAS = [
+    "Buenos Aires",
+    "Catamarca",
+    "Chaco",
+    "Chubut",
+    "Córdoba",
+    "Corrientes",
+    "Entre Ríos",
+    "Formosa",
+    "Jujuy",
+    "La Pampa",
+    "La Rioja",
+    "Mendoza",
+    "Misiones",
+    "Neuquén",
+    "Río Negro",
+    "Salta",
+    "San Juan",
+    "San Luis",
+    "Santa Cruz",
+    "Santa Fe",
+    "Santiago del Estero",
+    "Tierra del Fuego",
+    "Tucumán"
+]
 
-    async with async_playwright() as p:  # Inicia Playwright en contexto asíncrono
-        browser = await p.chromium.launch(headless=True)  # Lanza navegador Chromium sin interfaz gráfica
-        context = await browser.new_context()  # Crea un contexto nuevo (como una pestaña)
-        page = await context.new_page()  # Abre una página nueva
+def normalizar_correo(correo):
+    """Normaliza un correo electrónico eliminando caracteres especiales."""
+    if not correo:
+        return ""
+    # Elimina espacios en blanco
+    correo = correo.strip()
+    # Elimina caracteres especiales excepto @ y .
+    correo = re.sub(r'[^a-zA-Z0-9@.]', '', correo)
+    return correo.lower()
+
+def mostrar_menu():
+    print("\n=== MENÚ DE PROVINCIAS ===")
+    for i, provincia in enumerate(PROVINCIAS, 1):
+        print(f"{i}. {provincia}")
+    print("0. Salir")
+    return input("\nSeleccione una provincia (número): ")
+
+async def scrapear_agencias_completo(provincia):
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context()
+        page = await context.new_page()
 
         try:
             print("🌐 Cargando página...")
-            await page.goto("https://www.agenciasdeviajes.ar/#buscador", timeout=30000)  # Abre la web con timeout de 30s
+            await page.goto("https://www.agenciasdeviajes.ar/#buscador", timeout=30000)
 
             print(f"⌨️ Buscando '{provincia}'...")
-            await page.wait_for_selector("input[placeholder*='Ciudad o Provincia']", timeout=20000)  # Espera el input
-            await page.fill("input[placeholder*='Ciudad o Provincia']", provincia)  # Escribe la provincia
-            await page.wait_for_timeout(2000)  # Espera 2 segundos por los resultados
+            await page.wait_for_selector("input[placeholder*='Ciudad o Provincia']", timeout=20000)
+            await page.fill("input[placeholder*='Ciudad o Provincia']", provincia)
+            await page.wait_for_timeout(2000)
 
             print("⌛ Esperando resultados...")
-            await page.wait_for_selector("h3.text-lg", timeout=20000)  # Espera a que aparezcan las agencias
+            await page.wait_for_selector("h3.text-lg", timeout=20000)
 
-            agencias = []  # Lista para guardar los datos
-            pagina = 1  # Contador de páginas
+            agencias = []
+            pagina = 1
 
-            while True:  # Loop para recorrer todas las páginas
+            while True:
                 print(f"📃 Página {pagina}: extrayendo agencias...")
 
-                h3_agencias = await page.query_selector_all("h3.text-lg")  # Encuentra los títulos de agencias
+                h3_agencias = await page.query_selector_all("h3.text-lg")
                 for h3 in h3_agencias:
-                    nombre = await h3.inner_text()  # Obtiene el nombre de la agencia
+                    nombre = await h3.inner_text()
                     telefono = ""
                     correo = ""
                     localidad = ""
 
-                    # Encuentra el contenedor padre con los detalles de contacto
                     contenedor = await h3.evaluate_handle("node => node.parentElement.parentElement")
                     contenedor_element = contenedor.as_element()
 
                     if contenedor_element:
-                        # Busca los párrafos donde están teléfono, correo, localidad
                         parrafos = await contenedor_element.query_selector_all("p.leading-relaxed.text-sm")
                         for p in parrafos:
                             texto = await p.inner_text()
@@ -68,10 +109,10 @@ async def scrapear_agencias_completo():
                                 telefono = texto.replace("Teléfono:", "").strip()
                             if "Correo electrónico:" in texto:
                                 correo = texto.replace("Correo electrónico:", "").strip()
+                                correo = normalizar_correo(correo)
                             if "Localidad:" in texto:
                                 localidad = texto.replace("Localidad:", "").strip()
 
-                    # Guarda los datos de la agencia
                     agencias.append({
                         "nombre": nombre,
                         "telefono": telefono,
@@ -80,7 +121,6 @@ async def scrapear_agencias_completo():
                         "provincia": provincia
                     })
 
-                # Cierra un modal si está abierto (como el de suscripción de video)
                 print("🧹 Cerrando modal si está abierto...")
                 await page.evaluate("""
                     () => {
@@ -90,31 +130,26 @@ async def scrapear_agencias_completo():
                         }
                     }
                 """)
-                await page.wait_for_timeout(1000)  # Espera un segundo luego de cerrar modal
+                await page.wait_for_timeout(1000)
 
-                # Verifica si existe el botón de "Siguiente página"
                 siguiente = page.locator("button[dusk='nextPage.after']")
                 if await siguiente.count() == 0 or not await siguiente.is_enabled():
                     print("⛔ No hay más páginas.")
-                    break  # Sale del loop si no hay más páginas
+                    break
 
                 try:
                     print("➡️ Haciendo clic en 'Siguiente'...")
-                    await siguiente.scroll_into_view_if_needed()  # Asegura que el botón sea visible
-                    await siguiente.click()  # Clic en botón de siguiente
-                    await page.wait_for_timeout(2500)  # Espera a que cargue la nueva página
-                    pagina += 1  # Incrementa el contador de página
+                    await siguiente.scroll_into_view_if_needed()
+                    await siguiente.click()
+                    await page.wait_for_timeout(2500)
+                    pagina += 1
                 except Exception as e:
                     print(f"⚠️ Error al hacer clic en 'Siguiente': {e}")
-                    break  # Sale del loop si ocurre un error
+                    break
 
-            await browser.close()  # Cierra el navegador
+            await browser.close()
 
-            # Crea carpeta destino en Drive si no existe
-            drive_folder = "/content/drive/MyDrive/EC/WebScraping/RNAV/"
-            os.makedirs(drive_folder, exist_ok=True)
-
-            # Guarda los datos como CSV localmente en Colab
+            # Guardar CSV local
             csv_filename = f"{provincia.lower().replace(' ', '_')}_agencias_viaje.csv"
             print(f"💾 Guardando en CSV: {csv_filename}")
             with open(csv_filename, "w", newline="", encoding="utf-8") as f:
@@ -122,14 +157,13 @@ async def scrapear_agencias_completo():
                 writer.writeheader()
                 writer.writerows(agencias)
 
-            # Exporta los datos a Excel y los guarda en Google Drive
+            # Guardar Excel en Drive
             df = pd.DataFrame(agencias)
-            xlsx_path = os.path.join(drive_folder, f"{provincia.lower().replace(' ', '_')}_agencias_viaje.xlsx")
+            xlsx_path = f"/content/drive/MyDrive/EC/WebScraping/RNAV/{provincia.lower().replace(' ', '_')}_agencias_viaje.xlsx"
             df.to_excel(xlsx_path, index=False)
             print(f"✅ Archivo Excel guardado en Google Drive: {xlsx_path}")
             print(f"📁 Total agencias: {len(agencias)}")
 
-        # Manejo de errores
         except KeyboardInterrupt:
             print("❌ Ejecución interrumpida por el usuario.")
         except TimeoutError as e:
@@ -137,5 +171,28 @@ async def scrapear_agencias_completo():
         except Exception as e:
             print(f"⚠️ Ocurrió un error inesperado: {e}")
 
-# Ejecutar la función
-await scrapear_agencias_completo()
+async def main():
+    while True:
+        opcion = mostrar_menu()
+        
+        if opcion == "0":
+            print("¡Hasta luego!")
+            break
+            
+        try:
+            opcion = int(opcion)
+            if 1 <= opcion <= len(PROVINCIAS):
+                provincia = PROVINCIAS[opcion - 1]
+                await scrapear_agencias_completo(provincia)
+                
+                continuar = input("\n¿Desea buscar otra provincia? (s/n): ").lower()
+                if continuar != 's':
+                    print("¡Hasta luego!")
+                    break
+            else:
+                print("Opción inválida. Por favor, seleccione un número válido.")
+        except ValueError:
+            print("Por favor, ingrese un número válido.")
+
+if __name__ == "__main__":
+    asyncio.run(main())

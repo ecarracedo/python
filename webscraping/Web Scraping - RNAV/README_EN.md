@@ -273,7 +273,11 @@ This project is published for educational and practice purposes.
 
 ecarracedo@gmail.com
 
-## 📋 Changelog
+## �� Changelog
+
+### [1.2.0] - 2024-03-21
+#### Added
+- Email normalization (removal of special characters and accents)
 
 ### [1.1.0] - 2024-03-21
 #### Added

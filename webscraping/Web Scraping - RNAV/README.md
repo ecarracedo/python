@@ -274,7 +274,11 @@ Este proyecto se publica con fines educativos y de práctica.
 
 ecarracedo@gmail.com
 
-## 📋 Changelog
+## �� Changelog
+
+### [1.2.0] - 2024-03-21
+#### Añadido
+- Normalización de correos electrónicos (eliminación de caracteres especiales y tildes)
 
 ### [1.1.0] - 2024-03-21
 #### Añadido

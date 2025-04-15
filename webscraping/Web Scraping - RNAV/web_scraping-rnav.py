@@ -2,6 +2,7 @@ import asyncio  # Importa la biblioteca para programación asíncrona
 import csv  # Importa la biblioteca para manejar archivos CSV
 import pandas as pd  # Importa pandas para análisis de datos
 import os  # Importa el módulo de sistema operativo para operaciones de archivos
+import re  # Importa el módulo re para operaciones de expresiones regulares
 #from google.colab import drive  # Importación de Google Drive (comentada)
 from playwright.async_api import async_playwright, TimeoutError  # Importa playwright para web scraping
 
@@ -41,6 +42,16 @@ def mostrar_menu():
         print(f"{i}. {provincia}")
     print("0. Salir")
     return input("\nSeleccione una provincia (número): ")
+
+def normalizar_correo(correo):
+    """Normaliza un correo electrónico eliminando caracteres especiales."""
+    if not correo:
+        return ""
+    # Elimina espacios en blanco
+    correo = correo.strip()
+    # Elimina caracteres especiales excepto @ y .
+    correo = re.sub(r'[^a-zA-Z0-9@.]', '', correo)
+    return correo.lower()
 
 async def scrapear_agencias_completo(provincia):
     async with async_playwright() as p:  # Inicializa playwright
@@ -83,7 +94,8 @@ async def scrapear_agencias_completo(provincia):
                             if "Teléfono:" in texto:  # Si contiene información de teléfono
                                 telefono = texto.replace("Teléfono:", "").strip()  # Extrae el número de teléfono
                             if "Correo electrónico:" in texto:  # Si contiene información de correo
-                                correo = texto.replace("Correo electrónico:", "").strip()  # Extrae el correo electrónico
+                                correo = texto.replace("Correo electrónico:", "").strip()
+                                correo = normalizar_correo(correo)  # Normaliza el correo
                             if "Localidad:" in texto:  # Si contiene información de localidad
                                 localidad = texto.replace("Localidad:", "").strip()  # Extrae la localidad
 
@@ -179,5 +191,3 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())  # Ejecuta la función main si el script se ejecuta directamente
-
-    
