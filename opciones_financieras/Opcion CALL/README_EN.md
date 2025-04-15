@@ -10,6 +10,30 @@ The project includes:
 - Financial data visualization
 - Technical analysis tools
 
+## Types of CALL Options
+
+### Buy CALL
+
+Buying a call option is a bullish strategy that offers potentially unlimited profit with limited loss. It is the most intuitive bullish simple strategy and is ideal if we are convinced that a stock will rise significantly in price.
+
+- `Potential Profit`: Unlimited
+- `Potential Loss`: Limited (the premium paid)
+- `Optimal Strategy`: If the underlying rises significantly in price
+- `What is paid`: A premium, which is the cost of the option
+
+### Sell CALL
+
+Selling a call option is a bearish strategy that offers limited potential profit and has unlimited loss. It is ideal if we are convinced that a stock will not rise significantly in price.
+
+- `Potential Profit`: Limited (the premium received)
+- `Potential Loss`: Unlimited
+- `Optimal Strategy`: If the asset price falls below the strike price
+- `What is received`: A premium, which is the cost of the option and the profit obtained until expiration
+
+### Useful Links
+
+https://www.investing.com/academy/trading/call-put-options/
+
 ## Requirements
 
 To run this project, you need to have installed:
@@ -24,7 +48,8 @@ To run this project, you need to have installed:
 
 The project includes scripts that allow:
 
-- `opcion_call.py`: Main script for options analysis
+- `compra_call.py`: Main script for analyzing CALL buy options
+- `venta_call.py`: Main script for analyzing CALL sell options
 - `resultados`: Folder where option payoff results are saved in xlsx format
 
 ## Parameter Explanation
@@ -66,7 +91,13 @@ This analysis allows visualizing:
 
 ### Example
 
+#### Buy CALL
+
 <img src="resultados/3910_compra_call_grafico.png" alt="Result of a CALL Purchase" width="500"/>
+
+#### Sell CALL
+
+<img src="resultados/3910_venta_call_grafico.png" alt="Result of a CALL Sale" width="500"/>
 
 ## Contributions
 
