@@ -272,3 +272,18 @@ This project is published for educational and practice purposes.
 ## 📌 Contact
 
 ecarracedo@gmail.com
+
+## 📋 Changelog
+
+### [1.1.0] - 2024-03-21
+#### Added
+- Interactive menu with all Argentine provinces
+- Option to run the script again with another province
+- Improved error handling in province selection
+
+### [1.0.0] - 2024-03-20
+#### Added
+- Initial scraper version
+- Travel agency data extraction
+- CSV and Excel file saving
+- Automatic handling of pop-up modals

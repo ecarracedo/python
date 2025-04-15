@@ -273,3 +273,18 @@ Este proyecto se publica con fines educativos y de práctica.
 ## 📌 Contacto
 
 ecarracedo@gmail.com
+
+## 📋 Changelog
+
+### [1.1.0] - 2024-03-21
+#### Añadido
+- Menú interactivo con todas las provincias de Argentina
+- Opción para volver a ejecutar el script con otra provincia
+- Mejor manejo de errores en la selección de provincias
+
+### [1.0.0] - 2024-03-20
+#### Añadido
+- Versión inicial del scraper
+- Extracción de datos de agencias de viaje
+- Guardado en formato CSV y Excel
+- Manejo automático de modales emergentes

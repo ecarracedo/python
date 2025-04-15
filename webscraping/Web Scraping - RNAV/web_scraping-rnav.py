@@ -8,9 +8,41 @@ from playwright.async_api import async_playwright, TimeoutError  # Importa playw
 # Montar Google Drive
 #drive.mount('/content/drive')  # Monta Google Drive en el entorno (comentado)
 
-async def scrapear_agencias_completo():
-    provincia = input("📍 Ingresá la provincia que querés buscar: ").strip()  # Solicita al usuario que ingrese la provincia
+# Lista de provincias de Argentina
+PROVINCIAS = [
+    "Buenos Aires",
+    "Catamarca",
+    "Chaco",
+    "Chubut",
+    "Córdoba",
+    "Corrientes",
+    "Entre Ríos",
+    "Formosa",
+    "Jujuy",
+    "La Pampa",
+    "La Rioja",
+    "Mendoza",
+    "Misiones",
+    "Neuquén",
+    "Río Negro",
+    "Salta",
+    "San Juan",
+    "San Luis",
+    "Santa Cruz",
+    "Santa Fe",
+    "Santiago del Estero",
+    "Tierra del Fuego",
+    "Tucumán"
+]
 
+def mostrar_menu():
+    print("\n=== MENÚ DE PROVINCIAS ===")
+    for i, provincia in enumerate(PROVINCIAS, 1):
+        print(f"{i}. {provincia}")
+    print("0. Salir")
+    return input("\nSeleccione una provincia (número): ")
+
+async def scrapear_agencias_completo(provincia):
     async with async_playwright() as p:  # Inicializa playwright
         browser = await p.chromium.launch(headless=True)  # Inicia el navegador en modo headless (sin interfaz gráfica)
         context = await browser.new_context()  # Crea un nuevo contexto de navegación
@@ -123,7 +155,29 @@ async def scrapear_agencias_completo():
             print(f"⚠️ Ocurrió un error inesperado: {e}")  # Maneja cualquier otro error
 
 async def main():
-    await scrapear_agencias_completo()  # Llama a la función principal de scraping
+    while True:
+        opcion = mostrar_menu()
+        
+        if opcion == "0":
+            print("¡Hasta luego!")
+            break
+            
+        try:
+            opcion = int(opcion)
+            if 1 <= opcion <= len(PROVINCIAS):
+                provincia = PROVINCIAS[opcion - 1]
+                await scrapear_agencias_completo(provincia)
+                
+                continuar = input("\n¿Desea buscar otra provincia? (s/n): ").lower()
+                if continuar != 's':
+                    print("¡Hasta luego!")
+                    break
+            else:
+                print("Opción inválida. Por favor, seleccione un número válido.")
+        except ValueError:
+            print("Por favor, ingrese un número válido.")
 
 if __name__ == "__main__":
     asyncio.run(main())  # Ejecuta la función main si el script se ejecuta directamente
+
+    
