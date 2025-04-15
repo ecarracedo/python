@@ -1,3 +1,11 @@
+# ====================================================================
+# Autor: Emiliano Carracedo
+# Título: Analista de Sistemas
+# Ubicación: Córdoba, Argentina
+# Contacto: ecarracedo@gmail.com
+# Descripción: Script para análisis de opciones financieras - Compra de CALL
+# ====================================================================
+
 import os  # Importa el módulo os para interactuar con el sistema operativo
 import pandas as pd  # Importa pandas para la manipulación de datos
 import matplotlib.pyplot as plt  # Importa matplotlib para la creación de gráficos
