@@ -17,7 +17,7 @@ Para ejecutar este proyecto, necesitas tener instalado:
 - `Python 3.x`: Lenguaje de programación principal utilizado en el proyecto
 - `pandas`: Biblioteca para manipulación y análisis de datos, especialmente útil para trabajar con DataFrames y series temporales
 - `numpy`: Biblioteca fundamental para computación científica, proporciona soporte para arrays multidimensionales y operaciones matemáticas
--`matplotlib`: Biblioteca para visualización de datos, permite crear gráficos y visualizaciones interactivas
+- `matplotlib`: Biblioteca para visualización de datos, permite crear gráficos y visualizaciones interactivas
 - `openpyxl`: Biblioteca para leer y escribir archivos Excel (.xlsx), utilizada para la exportación de resultados
 
 ## Uso
