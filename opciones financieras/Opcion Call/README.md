@@ -1,6 +1,6 @@
-# Análisis de Opciones Financieras
+# Análisis de Opciones Financieras CALL
 
-Este repositorio contiene herramientas y análisis para el estudio de opciones financieras utilizando Python.
+Este repositorio contiene herramientas y análisis para el estudio de opciones financieras CALL utilizando Python.
 
 ## Descripción
 
@@ -20,25 +20,12 @@ Para ejecutar este proyecto, necesitas tener instalado:
 - matplotlib
 - openpyxl
 
-## Instalación
-
-1. Clona este repositorio:
-```bash
-git clone [URL_DEL_REPOSITORIO]
-```
-
-2. Instala las dependencias:
-```bash
-pip install -r requirements.txt
-```
-
 ## Uso
 
-El proyecto incluye varios scripts para diferentes análisis:
+El proyecto incluye el scripts que perm
 
 - `opciones_financieras.py`: Script principal para el análisis de opciones
-- `analisis_tecnico.py`: Herramientas para análisis técnico
-- `visualizacion.py`: Funciones para visualización de datos
+- `resultados`: Carpeta donde se guarda el resultado de los payoff de las opciones en formato xlsx
 
 ## Explicación de Parámetros
 
@@ -79,6 +66,10 @@ Este análisis permite visualizar:
 
 Las contribuciones son bienvenidas. Por favor, abre un issue para discutir los cambios propuestos.
 
-## Licencia
+## 📜 Licencia
 
-Este proyecto está bajo la Licencia MIT. 
+Este proyecto se publica con fines educativos y de práctica.
+
+## 📌 Contacto
+
+ecarracedo@gmail.com
