@@ -273,7 +273,15 @@ This project is published for educational and practice purposes.
 
 ecarracedo@gmail.com
 
-## �� Changelog
+## 📋 Changelog
+
+### [1.3.0] - 2024-03-21
+#### Added
+- Email normalization improvements:
+  - Detection and correction of missing @ in common domains
+  - Detection and correction of missing .com in common domains
+  - Replacement of common symbols used instead of @
+  - Better handling of special characters
 
 ### [1.2.0] - 2024-03-21
 #### Added

@@ -44,14 +44,42 @@ def mostrar_menu():
     return input("\nSeleccione una provincia (número): ")
 
 def normalizar_correo(correo):
-    """Normaliza un correo electrónico eliminando caracteres especiales."""
+    """Normaliza y valida un correo electrónico."""
     if not correo:
         return ""
+    
     # Elimina espacios en blanco
     correo = correo.strip()
+    
+    # Reemplaza símbolos comunes que se usan en lugar de @
+    correo = correo.replace('(at)', '@')
+    correo = correo.replace('[at]', '@')
+    correo = correo.replace('(arroba)', '@')
+    correo = correo.replace('[arroba]', '@')
+    
+    # Verifica si falta el @ y lo agrega en casos comunes
+    if 'gmail.com' in correo and '@' not in correo:
+        correo = correo.replace('gmail.com', '@gmail.com')
+    elif 'hotmail.com' in correo and '@' not in correo:
+        correo = correo.replace('hotmail.com', '@hotmail.com')
+    elif 'yahoo.com' in correo and '@' not in correo:
+        correo = correo.replace('yahoo.com', '@yahoo.com')
+    
+    # Verifica si falta el .com en dominios comunes
+    if '@gmail' in correo and not correo.endswith('.com'):
+        correo += '.com'
+    elif '@hotmail' in correo and not correo.endswith('.com'):
+        correo += '.com'
+    elif '@yahoo' in correo and not correo.endswith('.com'):
+        correo += '.com'
+    
     # Elimina caracteres especiales excepto @ y .
     correo = re.sub(r'[^a-zA-Z0-9@.]', '', correo)
-    return correo.lower()
+    
+    # Convierte a minúsculas
+    correo = correo.lower()
+    
+    return correo
 
 async def scrapear_agencias_completo(provincia):
     async with async_playwright() as p:  # Inicializa playwright

@@ -274,7 +274,15 @@ Este proyecto se publica con fines educativos y de práctica.
 
 ecarracedo@gmail.com
 
-## �� Changelog
+## 📋 Changelog
+
+### [1.3.0] - 2024-03-21
+#### Añadido
+- Mejoras en la normalización de correos electrónicos:
+  - Detección y corrección de falta de @ en dominios comunes
+  - Detección y corrección de falta de .com en dominios comunes
+  - Reemplazo de símbolos comunes que se usan en lugar de @
+  - Mejor manejo de caracteres especiales
 
 ### [1.2.0] - 2024-03-21
 #### Añadido
