@@ -91,7 +91,13 @@ Este análisis permite visualizar:
 
 ### Ejemplo
 
+#### Compra CALL
+
 <img src="resultados/3910_compra_call_grafico.png" alt="Resultado de una Compra de CALL" width="500"/>
+
+#### Venta CALL
+
+<img src="resultados/3910_venta_call_grafico.png" alt="Resultado de una Venta de CALL" width="500"/>
 
 ## Contribuciones
 
