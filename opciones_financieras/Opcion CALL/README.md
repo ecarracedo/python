@@ -56,11 +56,17 @@ El análisis de opciones incluye dos componentes principales:
 - El resultado se multiplica por la cantidad de contratos para obtener el payoff total
 - Los datos se almacenan en una lista con el formato: `[precio_sub, resultado * cant_contratos]`
 
+### 3. Visualización
+
 Este análisis permite visualizar:
 - El punto de equilibrio (donde la ganancia es cero)
 - La ganancia potencial en diferentes escenarios de precios
 - El riesgo máximo (limitado a la prima pagada)
 - La ganancia potencial ilimitada en caso de opciones call
+
+### Ejemplo
+
+<img src="resultados/3910_compra_call_grafico.png" alt="Resultado de una Compra de CALL" width="500"/>
 
 ## Contribuciones
 
