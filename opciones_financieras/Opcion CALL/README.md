@@ -16,11 +16,11 @@ El proyecto incluye:
 
 Una opción call es el derecho a comprar un futuro subyacente a un precio determinado. Cuando los operadores compran un futuro, se benefician cuando el mercado sube. La opción call tiene un potencial de ganancia parecido a un futuro largo.
 
-`Que se obtiene`: El derecho a comprar un activo a un precio fijo
-`Cuándo se puede ejercer`: Hasta una fecha concreta, conocida como fecha de vencimiento
-`Cuándo se obtiene beneficio`:Si el precio del activo aumenta por encima del precio de ejercicio
-`Cuándo se pierde dinero`: Si el precio del activo cae por debajo del precio de ejercicio
-`Qué se paga`: Una prima, que es el coste de la opción
+- `Que se obtiene`: El derecho a comprar un activo a un precio fijo
+- `Cuándo se puede ejercer`: Hasta una fecha concreta, conocida como fecha de vencimiento
+- `Cuándo se obtiene beneficio`:Si el precio del activo aumenta por encima del precio de ejercicio
+- `Cuándo se pierde dinero`: Si el precio del activo cae por debajo del precio de ejercicio
+- `Qué se paga`: Una prima, que es el coste de la opción
 
 https://www.investing.com/academy/trading/call-put-options/
 
