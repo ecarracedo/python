@@ -12,15 +12,25 @@ El proyecto incluye:
 
 ## Tipos de Opciones CALL
 
-### Compra CALL: 
+### Compra CALL
 
-Una opción call es el derecho a comprar un futuro subyacente a un precio determinado. Cuando los operadores compran un futuro, se benefician cuando el mercado sube. La opción call tiene un potencial de ganancia parecido a un futuro largo.
+Comprar una opción call es una estrategia alcista que ofrece un beneficio potencialmente ilimitado y tiene una pérdida limitada. Es la estrategia alcista simple más intuitiva y es ideal si estamos convencidos de qué una acción va a subir de precio de manera significativa.
 
-- `Que se obtiene`: El derecho a comprar un activo a un precio fijo
-- `Cuándo se puede ejercer`: Hasta una fecha concreta, conocida como fecha de vencimiento
-- `Cuándo se obtiene beneficio`:Si el precio del activo aumenta por encima del precio de ejercicio
-- `Cuándo se pierde dinero`: Si el precio del activo cae por debajo del precio de ejercicio
+- `Beneficio Potencial`: Ilimitado
+- `Perdida Potencial`: Limitada (la prima pagada)
+- `Estrategia Optima`: Si el subyacente sube de precio de manera significativa
 - `Qué se paga`: Una prima, que es el coste de la opción
+
+### Venta CALL
+
+Vender una opción call es una estrategia bajista que ofrece una ganancia potencialmente limitado y tiene una pérdida ilimitada. Es ideal si estamos convencidos de qué una acción no va a subir de precio de manera significativa.
+
+- `Beneficio Potencial`: Limitado (la prima recibida)
+- `Perdida Potencial`: Ilimitada
+- `Estrategia Optima`: Si el precio del activo cae por debajo del precio de ejercicio
+- `Qué se recibe`: Una prima, que es el coste de la opción y la ganacia obtenida hasta su vencimiento.
+
+### Link de Interes
 
 https://www.investing.com/academy/trading/call-put-options/
 
