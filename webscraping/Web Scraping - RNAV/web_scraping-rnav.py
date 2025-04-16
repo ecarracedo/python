@@ -5,6 +5,7 @@ import os  # Importa el módulo de sistema operativo para operaciones de archivo
 import re  # Importa el módulo re para operaciones de expresiones regulares
 #from google.colab import drive  # Importación de Google Drive (comentada)
 from playwright.async_api import async_playwright, TimeoutError  # Importa playwright para web scraping
+from email_validator import validate_email, EmailNotValidError
 
 # Montar Google Drive
 #drive.mount('/content/drive')  # Monta Google Drive en el entorno (comentado)
@@ -36,6 +37,70 @@ PROVINCIAS = [
     "Tucumán"
 ]
 
+# Lista para almacenar correos inválidos
+correos_invalidos = []
+nombre_agencia_actual = ""
+
+def corregir_correos_invalidos():
+    global correos_invalidos
+
+    if not correos_invalidos:
+        print("\n✅ No hay correos inválidos para corregir.")
+        return
+
+    correcciones = {}
+
+    for i, item in enumerate(correos_invalidos, 1):
+        nombre_agencia = item["nombre_agencia"]
+        correo_invalido = item["correo"]
+
+        print(f"\n[{i}] Agencia: {nombre_agencia}")
+        print(f"Correo inválido: {correo_invalido}")
+        nuevo_correo = input("Ingrese el correo corregido (o Enter para dejarlo en blanco): ").strip()
+
+        if nuevo_correo:
+            correcciones[nombre_agencia] = nuevo_correo
+
+    # Actualizar el archivo CSV
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    results_dir = os.path.join(script_dir, "resultados")
+    csv_files = [f for f in os.listdir(results_dir) if f.endswith('.csv')]
+
+    if not csv_files:
+        print("❌ No se encontró archivo CSV para actualizar.")
+        return
+
+    csv_file = os.path.join(results_dir, csv_files[-1])
+    df = pd.read_csv(csv_file)
+
+    cambios = 0
+    for i, row in df.iterrows():
+        nombre = row["nombre"]
+        if nombre in correcciones:
+            df.at[i, "correo"] = correcciones[nombre]
+            cambios += 1
+
+    if cambios:
+        df.to_csv(csv_file, index=False)
+        print(f"\n✅ Se corrigieron {cambios} correos en: {csv_file}")
+    else:
+        print("\n⚠️ No se realizaron cambios en el archivo.")
+
+    # Limpiar correos corregidos
+    correos_invalidos = [c for c in correos_invalidos if c["nombre_agencia"] not in correcciones]
+
+def mostrar_correos_invalidos():
+    global correos_invalidos
+    if correos_invalidos:
+        print("\n⚠️ Correos electrónicos inválidos encontrados:\n")
+        for i, item in enumerate(correos_invalidos, 1):
+            nombre = item.get("nombre_agencia", "(Sin nombre)")
+            correo = item.get("correo", "")
+            print(f"{i}. 🏢 Agencia: {nombre}\n   📧 Correo: {correo}\n")
+    else:
+        print("\n✅ No se encontraron correos electrónicos inválidos en esta búsqueda.")
+
+        
 def mostrar_menu():
     print("\n=== MENÚ DE PROVINCIAS ===")
     for i, provincia in enumerate(PROVINCIAS, 1):
@@ -43,10 +108,14 @@ def mostrar_menu():
     print("0. Salir")
     return input("\nSeleccione una provincia (número): ")
 
+
 def normalizar_correo(correo):
+    global correos_invalidos
     """Normaliza y valida un correo electrónico."""
     if not correo:
         return ""
+    
+    correo_original = correo  # Guardamos el correo original para el registro
     
     # Elimina espacios en blanco
     correo = correo.strip()
@@ -79,9 +148,26 @@ def normalizar_correo(correo):
     # Convierte a minúsculas
     correo = correo.lower()
     
+    # Validación final con email-validator
+    try:
+        # Validar el correo
+        emailinfo = validate_email(correo, check_deliverability=False)
+        # Normalizar el correo (por ejemplo, convierte 'Gmail.com' a 'gmail.com')
+        correo = emailinfo.normalized
+    except EmailNotValidError:
+        # Si el correo no es válido, lo agregamos a la lista de inválidos
+        if correo_original:
+            correos_invalidos.append({"nombre_agencia": nombre_agencia_actual, "correo": correo_original})
+            
+        return ""
+    
     return correo
 
 async def scrapear_agencias_completo(provincia):
+    global correos_invalidos
+    global nombre_agencia_actual
+    correos_invalidos = []  # Reiniciamos la lista para cada provincia
+    
     async with async_playwright() as p:  # Inicializa playwright
         browser = await p.chromium.launch(headless=True)  # Inicia el navegador en modo headless (sin interfaz gráfica)
         context = await browser.new_context()  # Crea un nuevo contexto de navegación
@@ -114,7 +200,7 @@ async def scrapear_agencias_completo(provincia):
 
                     contenedor = await h3.evaluate_handle("node => node.parentElement.parentElement")  # Obtiene el contenedor padre que tiene toda la info
                     contenedor_element = contenedor.as_element()  # Convierte a elemento para poder interactuar
-
+                    
                     if contenedor_element:  # Si se encontró el contenedor
                         parrafos = await contenedor_element.query_selector_all("p.leading-relaxed.text-sm")  # Obtiene todos los párrafos con información
                         for p in parrafos:  # Recorre cada párrafo
@@ -123,6 +209,7 @@ async def scrapear_agencias_completo(provincia):
                                 telefono = texto.replace("Teléfono:", "").strip()  # Extrae el número de teléfono
                             if "Correo electrónico:" in texto:  # Si contiene información de correo
                                 correo = texto.replace("Correo electrónico:", "").strip()
+                                nombre_agencia_actual = nombre  # Seteamos esta variable global temporal
                                 correo = normalizar_correo(correo)  # Normaliza el correo
                             if "Localidad:" in texto:  # Si contiene información de localidad
                                 localidad = texto.replace("Localidad:", "").strip()  # Extrae la localidad
@@ -185,6 +272,15 @@ async def scrapear_agencias_completo(provincia):
             #df.to_excel(xlsx_path, index=False)  # Guarda el DataFrame como Excel en Google Drive (comentado)
             #print(f"✅ Archivo Excel guardado en Google Drive: {xlsx_path}")  # Muestra mensaje de confirmación (comentado)
             
+            # Después de guardar los archivos, mostramos los correos inválidos
+            
+            mostrar_correos_invalidos()
+
+            if correos_invalidos:
+                intentar_corregir = input("\n¿Desea intentar corregir los correos inválidos encontrados antes de guardar? (s/n): ").lower()
+                if intentar_corregir == 's':
+                    corregir_correos_invalidos()
+
             print(f"📁 Total agencias: {len(agencias)}")  # Muestra el total de agencias encontradas
 
         except KeyboardInterrupt:
