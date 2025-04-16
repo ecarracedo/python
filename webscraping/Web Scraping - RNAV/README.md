@@ -303,15 +303,6 @@ Antes de guardar el archivo final, se ofrecerá la posibilidad de **modificarlos
 
 ---
 
-### Ejecución
-
-```python
-await scrapear_agencias_completo()   # Ejecuta todo el proceso
-```
-
----
-
-
 ## 📜 Licencia
 
 Este proyecto se publica con fines educativos y de práctica.
