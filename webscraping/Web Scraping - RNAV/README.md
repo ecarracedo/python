@@ -56,7 +56,8 @@ drive.mount('/content/drive')
 4. Se recorren todas las páginas de resultados.
 5. Por cada agencia, se extraen los datos desde su bloque HTML.
 6. Si aparece un **modal emergente (pop-up)**, se cierra automáticamente para no interrumpir la navegación.
-7. Finalmente, se guardan los resultados en CSV y XLSX.
+7. Antes de guardar los resultados, se realiza un proceso de normalización de correos.
+8. Finalmente, se guardan los resultados en CSV y XLXS.
 
 ## ⚙️ Manejo del Modal en el Scraping
 
@@ -256,6 +257,49 @@ async def scrapear_agencias_completo():
     except Exception as e:
         print(f"⚠️ Ocurrió un error inesperado: {e}")
 ```
+
+---
+
+## ✉️ Normalización y corrección de correos electrónicos
+
+Durante el proceso de scraping, los correos electrónicos extraídos son normalizados automáticamente para corregir errores comunes como:
+
+- Faltante del símbolo `@`
+- Dominios incompletos como `gmail` en lugar de `@gmail.com`
+- Sustituciones como `(at)`, `[arroba]`, etc.
+- Caracteres especiales no válidos
+
+Esta normalización se realiza con la función:
+
+```python
+normalizar_correo(correo: str) -> str
+```
+
+Si un correo no puede ser validado automáticamente, se almacena junto con el nombre de la agencia para su revisión posterior.
+
+---
+
+### 🛠 Corrección manual de correos
+
+Al finalizar el scraping, si hay correos inválidos, se listan y se ofrece la opción de corregirlos manualmente con:
+
+```python
+corregir_correos_invalidos()
+```
+
+Este proceso permite:
+
+- Ver el nombre de la agencia asociada al correo inválido
+- Ingresar una corrección válida
+- Validar automáticamente el nuevo correo
+- Actualizar el archivo CSV con la corrección correspondiente
+
+---
+
+### ⚠️ Aviso al usuario antes de guardar
+
+En caso de que **uno o más correos no puedan ser normalizados automáticamente**, el sistema lo informará al usuario.  
+Antes de guardar el archivo final, se ofrecerá la posibilidad de **modificarlos manualmente**, asegurando así que la información quede lo más completa y precisa posible.
 
 ---
 

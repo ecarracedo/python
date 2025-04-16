@@ -256,7 +256,19 @@ async def scrape_agencies_complete():
     except Exception as e:
         print(f"⚠️ An unexpected error occurred: {e}")
 ```
+## ✉️ Normalización y corrección de correos electrónicos
 
+Durante el proceso de scraping, los correos electrónicos extraídos son normalizados automáticamente para corregir errores comunes como:
+
+- Faltante del símbolo `@`
+- Dominios incompletos como `gmail` en lugar de `@gmail.com`
+- Sustituciones como `(at)`, `[arroba]`, etc.
+- Caracteres especiales no válidos
+
+Esta normalización se realiza con la función:
+
+```python
+normalizar_correo(correo: str) -> str
 ---
 
 ### Execution
