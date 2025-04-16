@@ -1,4 +1,4 @@
-🌐 This README is also available in [Spanish](README.md)
+🌐 Este README esta disponible en [Español](README.md)
 
 # Travel Agency Scraper in Argentina 🇦🇷
 
