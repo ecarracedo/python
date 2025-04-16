@@ -1,3 +1,5 @@
+🌐 Este README también está disponible en [Español](README.md)
+
 # Travel Agency Scraper in Argentina 🇦🇷
 
 This project allows extracting information from travel agencies registered on [https://www.agenciasdeviajes.ar/](https://www.agenciasdeviajes.ar/) using `Playwright` in an environment like Google Colab.
@@ -274,6 +276,17 @@ This project is published for educational and practice purposes.
 ecarracedo@gmail.com
 
 ## 📋 Changelog
+
+### [1.4.0] - 2025-04-16  
+#### Added  
+- Association of invalid email addresses with the corresponding agency name during scraping  
+- Option to manually correct invalid emails, clearly identifying which agency each one belongs to  
+- Improved validation of manually entered email addresses  
+- Automatic update of the CSV file with corrections  
+- Enhanced display format for invalid emails (more readable and professional)
+
+#### Fixed  
+- Issue where the agency name was not correctly stored when an invalid email was detected
 
 ### [1.3.0] - 2024-03-21
 #### Added

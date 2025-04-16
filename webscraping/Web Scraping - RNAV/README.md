@@ -1,6 +1,4 @@
-🌐 Este README también está disponible en [English](README_EN.md)
-
-🌐 This README is also available in [Español](README.md)
+🌐 This README is also available in [English](README_EN.md)
 
 # Scraper de Agencias de Viaje en Argentina 🇦🇷
 
@@ -279,6 +277,17 @@ Este proyecto se publica con fines educativos y de práctica.
 ecarracedo@gmail.com
 
 ## 📋 Changelog
+
+### [1.4.0] - 2025-04-16
+#### Añadido
+- Asociación de correos inválidos con el nombre de la agencia durante el scraping
+- Opción para corregir manualmente correos inválidos, identificando claramente a qué agencia pertenecen
+- Validación mejorada de correos ingresados manualmente
+- Actualización automática del archivo CSV con correcciones
+- Mejora del formato de salida al mostrar correos inválidos (más legible y profesional)
+
+#### Corregido
+- Problema donde el nombre de la agencia no se guardaba correctamente al detectar un correo inválido
 
 ### [1.3.0] - 2024-03-21
 #### Añadido
