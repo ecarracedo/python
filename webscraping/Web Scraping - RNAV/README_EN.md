@@ -1,12 +1,12 @@
-🌐 Este README también está disponible en [Español](README.md)
+🌐 This README is also available in [Spanish](README.md)
 
 # Travel Agency Scraper in Argentina 🇦🇷
 
-This project allows extracting information from travel agencies registered on [https://www.agenciasdeviajes.ar/](https://www.agenciasdeviajes.ar/) using `Playwright` in an environment like Google Colab.
+This project allows you to extract information from registered travel agencies in [https://www.agenciasdeviajes.ar/](https://www.agenciasdeviajes.ar/) using `Playwright` in an environment like Google Colab.
 
 ## 📌 Description
 
-The script automates navigation through the official travel agency website, searching by province and extracting useful information such as:
+The script automates navigation through the official travel agency page, searching by province and extracting useful information such as:
 
 - Agency name
 - Phone number
@@ -14,23 +14,23 @@ The script automates navigation through the official travel agency website, sear
 - Location
 - Province
 
-Data is automatically saved to:
+The data is automatically saved in:
 
-- A local `.CSV` file
+- A `.CSV` file (local)
 - An `.XLSX` file in Google Drive
 
-There are two versions of Python files:
+There are two versions of files with the `.py` extension:
 
-- `web_scraping-rnav.py`: A version to run on your PC, without Google Drive connection
+- `web_scraping-rnav.py`: A version to run on your PC, without a connection to Google Drive
 - `web_scraping-rnav_colab-jupiter.py`: A version to run on Google Colab or Jupyter
 
 ## 🧰 Technologies Used
 
-- `Playwright` → For web automation
-- `asyncio` → For managing asynchronous tasks
-- `pandas` → For exporting data to Excel
-- `google.colab` → For mounting Google Drive
-- `nest_asyncio` → Allows running async loops inside Colab notebooks
+- `Playwright` → To automate web navigation
+- `asyncio` → To manage asynchronous tasks
+- `pandas` → To export data to Excel
+- `google.colab` → To mount Google Drive
+- `nest_asyncio` → Allows asynchronous loops to run within Colab notebooks
 
 ## ⚙️ Prerequisites
 
@@ -48,33 +48,34 @@ from google.colab import drive
 drive.mount('/content/drive')
 ```
 
-## 🧠 How it Works
+## 🧠 How It Works
 
-1. The user enters the **province** to search for.
+1. The user enters the **province** to query.
 2. The browser opens in the background and navigates to the site.
-3. The province is entered in the search box.
+3. The province is typed into the search bar.
 4. All result pages are traversed.
 5. For each agency, data is extracted from its HTML block.
-6. If a **pop-up modal** appears, it is automatically closed to prevent navigation interruption.
-7. Finally, results are saved in CSV and XLSX formats.
+6. If a **pop-up modal** appears, it is automatically closed to avoid interrupting navigation.
+7. Before saving the results, an email normalization process is performed.
+8. Finally, the results are saved in CSV and XLSX.
 
-## ⚙️ Modal Handling in Scraping
+## ⚙️ Handling Modals in Scraping
 
-During the scraping process, the webpage might display a modal (pop-up window) that blocks access to content or interrupts navigation. Modals are commonly used to show welcome messages, advertisements, or notifications. To ensure the scraper can continue running without issues, special handling was implemented to detect and close these modals if present.
+During the scraping process, sometimes the website may display a modal (a pop-up window) that blocks access to content or interrupts navigation. Modals are commonly used to show welcome messages, advertisements, or notifications. To ensure that the scraper can continue execution smoothly, special handling was implemented to detect and close these modals if present.
 
 ---
 
 ### **What does the code do regarding modals?**
 
-In the code, the `evaluate` function is used to check if a modal is open and close it. This process is done as follows:
+In the code, the `evaluate` function is used to check if an open modal exists and close it. This process is done as follows:
 
 ```python
-# Close the modal (if open) to continue navigation
+# Close the modal (if open) to continue navigating
 await page.evaluate("""
     () => {
-        const modal = document.querySelector('[role=dialog]');  // Look for modal in DOM
-        if (modal) {  // If modal exists
-            window.dispatchEvent(new CustomEvent('close-modal', { detail: { id: 'video1year' }}));  // Close modal
+        const modal = document.querySelector('[role=dialog]');  // Search for the modal in the DOM
+        if (modal) {  // If the modal exists
+            window.dispatchEvent(new CustomEvent('close-modal', { detail: { id: 'video1year' }}));  // Close the modal
         }
     }
 """)
@@ -85,36 +86,36 @@ await page.evaluate("""
 #### **Code Explanation**:
 
 1. **`document.querySelector('[role=dialog]')`**  
-   This selector is used to find a modal in the webpage's DOM. The `[role=dialog]` attribute is commonly used to represent modals, as its semantic function is to show a dialog box.
+   This selector is used to search for a modal in the page's DOM. The attribute `[role=dialog]` is commonly used to represent modals since its semantic function is to display a dialog box.
 
 2. **`window.dispatchEvent(new CustomEvent('close-modal'))`**  
-   If the modal is found, a close event is sent using `dispatchEvent` to simulate closing the modal. This allows the scraper to continue working without being blocked by the modal.
+   If the modal is found, a close event is sent using `dispatchEvent` to simulate the action of closing the modal. This allows the scraper to continue working without being blocked by the modal.
 
 3. **Why is this important?**  
-   Without this modal handling, if the page displays a modal, it could block data extraction or interrupt navigation to the next page. This is prevented by automatically closing the modal if present.
+   Without this modal handling, if the page presents a modal, it could block data extraction or interrupt navigation to the next page. This is avoided by automatically closing the modal if it is present.
 
-## 📦 Script Execution
+## 📦 Running the Script
 
 ```python
-await scrape_agencies_complete()
+await scrapear_agencias_completo()
 ```
 
-# 🧠 Line by Line Code Explanation
+# 🧠 Line-by-Line Explanation of the Code
 
-This script automates the scraping of travel agencies from [https://www.agenciasdeviajes.ar](https://www.agenciasdeviajes.ar) using `Playwright` and runs perfectly on Google Colab.
+This script automates the scraping of travel agencies from [https://www.agenciasdeviajes.ar](https://www.agenciasdeviajes.ar) using `Playwright` and runs perfectly in Google Colab.
 
 ---
 
 ```python
-import asyncio                              # For handling asynchronous tasks
-import csv                                  # For saving data as CSV file
-import pandas as pd                         # For data manipulation and Excel export
-from google.colab import drive              # For mounting Google Drive in Colab
+import asyncio                              # To handle asynchronous tasks
+import csv                                  # To save data as a CSV file
+import pandas as pd                         # For data manipulation and exporting to Excel
+from google.colab import drive              # To mount Google Drive in Colab
 from playwright.async_api import async_playwright, TimeoutError  # Main web automation library
 ```
 
 ```python
-drive.mount('/content/drive')              # Mounts Google Drive to save files directly there
+drive.mount('/content/drive')              # Mount Google Drive to save files directly there
 ```
 
 ---
@@ -122,27 +123,27 @@ drive.mount('/content/drive')              # Mounts Google Drive to save files d
 ### Main Function
 
 ```python
-async def scrape_agencies_complete():
-    province = input("📍 Enter the province you want to search: ").strip()  # Asks user for province to search
+async def scrapear_agencias_completo():
+    province = input("📍 Enter the province you want to search: ").strip()  # Ask the user for the province to search
 ```
 
 ```python
-    async with async_playwright() as p:                      # Initializes Playwright
-        browser = await p.chromium.launch(headless=True)     # Launches Chromium browser in headless mode
-        context = await browser.new_context()                # Creates new context (like an isolated tab)
-        page = await context.new_page()                      # Opens new page
+    async with async_playwright() as p:                      # Initialize Playwright
+        browser = await p.chromium.launch(headless=True)     # Launch the Chromium browser in headless mode
+        context = await browser.new_context()                # Create a new context (like an isolated tab)
+        page = await context.new_page()                      # Open a new page
 ```
 
 ---
 
-### Go to Web and Search
+### Go to the Web and Search
 
 ```python
-        await page.goto("https://www.agenciasdeviajes.ar/#buscador", timeout=30000)  # Loads the page
-        await page.wait_for_selector("input[placeholder*='Ciudad o Provincia']", timeout=20000)
-        await page.fill("input[placeholder*='Ciudad o Provincia']", province)        # Writes the province
-        await page.wait_for_timeout(2000)                                             # Waits for loading
-        await page.wait_for_selector("h3.text-lg", timeout=20000)                    # Waits for results to appear
+        await page.goto("https://www.agenciasdeviajes.ar/#buscador", timeout=30000)  # Load the page
+        await page.wait_for_selector("input[placeholder*='City or Province']", timeout=20000)
+        await page.fill("input[placeholder*='City or Province']", province)        # Type the province
+        await page.wait_for_timeout(2000)                                             # Wait for it to load
+        await page.wait_for_selector("h3.text-lg", timeout=20000)                    # Wait for results to appear
 ```
 
 ---
@@ -150,38 +151,38 @@ async def scrape_agencies_complete():
 ### Extract Results
 
 ```python
-        agencies = []             # List where data will be stored
-        page_num = 1              # Page counter
+        agencies = []             # List to store the data
+        page_number = 1           # Page counter
 
         while True:
-            h3_agencies = await page.query_selector_all("h3.text-lg")  # Finds titles (agency names)
+            h3_agencies = await page.query_selector_all("h3.text-lg")  # Find the titles (agency names)
 ```
 
 ```python
             for h3 in h3_agencies:
-                name = await h3.inner_text()      # Extracts agency name
+                name = await h3.inner_text()      # Extract the agency name
                 phone = ""
                 email = ""
                 location = ""
 
-                container = await h3.evaluate_handle("node => node.parentElement.parentElement")  # Goes to info container
+                container = await h3.evaluate_handle("node => node.parentElement.parentElement")  # Go to the info container
                 container_element = container.as_element()
 
                 if container_element:
-                    paragraphs = await container_element.query_selector_all("p.leading-relaxed.text-sm")  # Finds data paragraphs
+                    paragraphs = await container_element.query_selector_all("p.leading-relaxed.text-sm")  # Look for data paragraphs
 
                     for p in paragraphs:
                         text = await p.inner_text()
-                        if "Teléfono:" in text:
-                            phone = text.replace("Teléfono:", "").strip()
-                        if "Correo electrónico:" in text:
-                            email = text.replace("Correo electrónico:", "").strip()
-                        if "Localidad:" in text:
-                            location = text.replace("Localidad:", "").strip()
+                        if "Phone:" in text:
+                            phone = text.replace("Phone:", "").strip()
+                        if "Email:" in text:
+                            email = text.replace("Email:", "").strip()
+                        if "Location:" in text:
+                            location = text.replace("Location:", "").strip()
 ```
 
 ```python
-                agencies.append({                               # Adds data to the list
+                agencies.append({                               # Add the data to the list
                     "name": name,
                     "phone": phone,
                     "email": email,
@@ -192,10 +193,10 @@ async def scrape_agencies_complete():
 
 ---
 
-### Modal Closing (if appears)
+### Close Modal (if it appears)
 
 ```python
-            await page.evaluate("""                            # Executes JavaScript code to close pop-up modal
+            await page.evaluate("""                            # Execute JavaScript to close a pop-up modal
                 () => {
                     const modal = document.querySelector('[role=dialog]');
                     if (modal) {
@@ -207,29 +208,29 @@ async def scrape_agencies_complete():
 
 ---
 
-### Page Navigation
+### Navigation Between Pages
 
 ```python
-            next_button = page.locator("button[dusk='nextPage.after']")    # Finds "Next" button
-            if await next_button.count() == 0 or not await next_button.is_enabled():  # If no more pages
+            next_button = page.locator("button[dusk='nextPage.after']")    # Look for the "Next" button
+            if await next_button.count() == 0 or not await next_button.is_enabled():  # If there are no more pages
                 break
 
-            await next_button.scroll_into_view_if_needed()    # Ensures button is visible
-            await next_button.click()                         # Clicks "Next"
-            await page.wait_for_timeout(2500)               # Waits for loading
-            page_num += 1
+            await next_button.scroll_into_view_if_needed()    # Ensure the button is visible
+            await next_button.click()                         # Click on "Next"
+            await page.wait_for_timeout(2500)               # Wait for it to load
+            page_number += 1
 ```
 
 ---
 
-### Data Saving
+### Saving Data
 
 ```python
-        await browser.close()   # Closes browser
+        await browser.close()   # Close the browser
 ```
 
 ```python
-        # Save local CSV
+        # Save CSV locally
         csv_filename = f"{province.lower().replace(' ', '_')}_travel_agencies.csv"
         with open(csv_filename, "w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=["name", "phone", "email", "location", "province"])
@@ -238,7 +239,7 @@ async def scrape_agencies_complete():
 ```
 
 ```python
-        # Save Excel to Drive
+        # Save Excel in Drive
         df = pd.DataFrame(agencies)
         xlsx_path = f"/content/drive/MyDrive/EC/WebScraping/RNAV/{province.lower().replace(' ', '_')}_travel_agencies.xlsx"
         df.to_excel(xlsx_path, index=False)
@@ -246,42 +247,65 @@ async def scrape_agencies_complete():
 
 ---
 
-### Error Handling
+### Error Handler
 
 ```python
     except KeyboardInterrupt:
-        print("❌ Execution interrupted by user.")
+        print("❌ Execution interrupted by the user.")
     except TimeoutError as e:
         print(f"❌ Timeout reached: {e}")
     except Exception as e:
         print(f"⚠️ An unexpected error occurred: {e}")
 ```
-## ✉️ Normalización y corrección de correos electrónicos
 
-Durante el proceso de scraping, los correos electrónicos extraídos son normalizados automáticamente para corregir errores comunes como:
+---
 
-- Faltante del símbolo `@`
-- Dominios incompletos como `gmail` en lugar de `@gmail.com`
-- Sustituciones como `(at)`, `[arroba]`, etc.
-- Caracteres especiales no válidos
+## ✉️ Normalization and Correction of Emails
 
-Esta normalización se realiza con la función:
+During the scraping process, extracted emails are automatically normalized to correct common errors such as:
+
+- Missing the `@` symbol
+- Incomplete domains like `gmail` instead of `@gmail.com`
+- Substitutions like `(at)`, `[at]`, etc.
+- Invalid special characters
+
+This normalization is done with the function:
 
 ```python
 normalizar_correo(correo: str) -> str
+```
+
+If an email cannot be validated automatically, it is stored along with the agency name for later review.
+
 ---
 
-### Execution
+### 🛠 Manual Correction of Emails
+
+At the end of scraping, if there are invalid emails, they are listed and the option to correct them manually is offered with:
 
 ```python
-await scrape_agencies_complete()   # Executes the entire process
+corregir_correos_invalidos()
 ```
+
+This process allows:
+
+- Viewing the name of the agency associated with the invalid email
+- Entering a valid correction
+- Automatically validating the new email
+- Updating the CSV file with the corresponding correction
+
+---
+
+### ⚠️ User Notice Before Saving
+
+If **one or more emails cannot be automatically normalized**, the system will inform the user.  
+Before saving the final file, the option to **modify them manually** will be offered, thus ensuring that the information is as complete and accurate as possible.
 
 ---
 
 ## 📜 License
 
-This project is published for educational and practice purposes. 
+This project is published for educational and practice purposes.
 
 ## 📌 Contact
 
@@ -289,20 +313,20 @@ ecarracedo@gmail.com
 
 ## 📋 Changelog
 
-### [1.4.0] - 2025-04-16  
-#### Added  
-- Association of invalid email addresses with the corresponding agency name during scraping  
-- Option to manually correct invalid emails, clearly identifying which agency each one belongs to  
-- Improved validation of manually entered email addresses  
-- Automatic update of the CSV file with corrections  
-- Enhanced display format for invalid emails (more readable and professional)
+### [1.4.0] - 2025-04-16
+#### Added
+- Association of invalid emails with the agency name during scraping
+- Option to manually correct invalid emails, clearly identifying which agency they belong to
+- Improved validation of manually entered emails
+- Automatic update of the CSV file with corrections
+- Improved output format for displaying invalid emails (more readable and professional)
 
-#### Fixed  
-- Issue where the agency name was not correctly stored when an invalid email was detected
+#### Fixed
+- Issue where the agency name was not correctly saved when an invalid email was detected
 
 ### [1.3.0] - 2024-03-21
 #### Added
-- Email normalization improvements:
+- Improvements in email normalization:
   - Detection and correction of missing @ in common domains
   - Detection and correction of missing .com in common domains
   - Replacement of common symbols used instead of @
@@ -314,13 +338,13 @@ ecarracedo@gmail.com
 
 ### [1.1.0] - 2024-03-21
 #### Added
-- Interactive menu with all Argentine provinces
-- Option to run the script again with another province
-- Improved error handling in province selection
+- Interactive menu with all provinces of Argentina
+- Option to rerun the script with another province
+- Better error handling when selecting provinces
 
 ### [1.0.0] - 2024-03-20
 #### Added
-- Initial scraper version
-- Travel agency data extraction
-- CSV and Excel file saving
+- Initial version of the scraper
+- Data extraction from travel agencies
+- Saving in CSV and Excel format
 - Automatic handling of pop-up modals
